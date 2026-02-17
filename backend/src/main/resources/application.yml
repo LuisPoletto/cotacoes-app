@@ -12,5 +12,5 @@ datasources:
     driverClassName: org.postgresql.Driver
     username: postgres
     password: postgres
-    schema-generate: UPDATE
+    schema-generate: CREATE
     dialect: POSTGRES

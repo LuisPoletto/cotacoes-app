@@ -22,14 +22,14 @@ public class CotacaoService {
 
     public Cotacao salvar(Cotacao cotacao) {
         Indicador ind = indicadorRepository.findById(cotacao.getIndicador().getId())
-        .orElseThrow(() -> new RuntimeException("Indicador não encontrado!"));
+                .orElseThrow(() -> new RuntimeException("Indicador não encontrado!"));
 
         cotacao.setId(UUID.randomUUID());
         cotacao.setIndicador(ind);
         return repository.save(cotacao);
     }
 
-     public Cotacao editar(UUID id, Cotacao novo) {
+    public Cotacao editar(UUID id, Cotacao novo) {
         if (repository.existsById(id)) {
             novo.setId(id);
             return repository.update(novo);
@@ -38,7 +38,7 @@ public class CotacaoService {
     }
 
     public List<Cotacao> listar() {
-        return (List<Cotacao>) repository.findAll();
+        return repository.list();
     }
 
     public void excluir(UUID id) {

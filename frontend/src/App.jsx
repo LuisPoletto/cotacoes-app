@@ -78,12 +78,18 @@ export default function Home() {
 
   return (
     <div style={{
-      display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", width: "100vw",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center",
+      width: "100vw",
+      height: "100vw",
+      backgroundColor: "#222",
     }}>
-      <h1>Novo Indicador</h1>
+      <h1 style={{ color: "#fff" }}>Novo Indicador</h1>
       <IndicadorForm nome={nomeIndicador} setNome={setNomeIndicador} onSalvar={handleSalvarIndicador} />
 
-      <h1>Lista Indicadores</h1>
+      <h1 style={{ color: "#fff" }}>Lista Indicadores</h1>
       <IndicadorList
         indicadores={indicadores}
         editandoId={editandoId}
@@ -94,7 +100,7 @@ export default function Home() {
         onExcluir={handleExcluirIndicador}
       />
 
-      <h1>Nova Cotação</h1>
+      <h1 style={{ color: "#fff" }}>Nova Cotação</h1>
       <CotacaoForm
         indicadores={indicadores}
         indicadorSelecionado={indicadorSelecionado}
@@ -104,7 +110,7 @@ export default function Home() {
         onSalvar={handleSalvarCotacao}
       />
 
-      <h1>Lista Cotações</h1>
+      <h1 style={{ color: "#fff" }}>Lista Cotações</h1>
       <CotacaoList
         cotacoes={cotacoes}
         editandoCotacaoId={editandoCotacaoId}
