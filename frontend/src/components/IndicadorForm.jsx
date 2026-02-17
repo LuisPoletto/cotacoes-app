@@ -27,7 +27,8 @@ export default function IndicadorForm({ nome, setNome, onSalvar }) {
             <button
                 onClick={onSalvar}
                 style={{
-                    backgroundColor: "#222",
+                    backgroundColor: "#08a88a",
+                    color: "#fff",
                     border: "none",
                     borderRadius: "50px",
                     width: "80px",

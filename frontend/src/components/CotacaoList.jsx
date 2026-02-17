@@ -24,10 +24,6 @@ export default function CotacaoList({
         return `${dia}/${mes}/${ano} | ${horas}:${minutos}`;
     }
 
-    const btnStyle = {
-
-    };
-
     return (
         <div style={{
             backgroundColor: "#fff",
@@ -39,40 +35,60 @@ export default function CotacaoList({
             alignItems: "center",
             padding: "10px 0"
         }}>
-            {cotacoes.map((cot) => (
-                <div key={cot.id} style={{
-                    width: "90%",
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    padding: "5px 0",
-                    color: "#222",
-                }}>
-                    {editandoCotacaoId === cot.id ? (
-                        <input
-                            value={valorCotacaoEditado}
-                            onChange={e => setValorCotacaoEditado(e.target.value)}
-                        />
-                    ) : (
-                        <span>{cot.indicador.nome} - {formatarValor(cot.valor)} - {formatarData(cot.data)}</span>
-                    )}
-                    <div style={{ display: "flex", gap: "5px" }}>
+            {cotacoes.map((cot, index) => (
+                <div key={cot.id} style={{ width: "100%" }}>
+                    <div style={{
+                        width: "90%",
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        padding: "5px 0",
+                        color: "#222",
+                        margin: "0 auto"
+                    }}>
                         {editandoCotacaoId === cot.id ? (
-                            <button style={{
-                                backgroundColor: "#222",
-                                border: "none",
-                                borderRadius: "50px",
-                                width: "80px",
-                                height: "40px",
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                cursor: "pointer",
-                                color: "#fff"
-                            }} onClick={() => onEditar(cot.id)}>Salvar</button>
+                            <input
+                                value={valorCotacaoEditado}
+                                onChange={e => setValorCotacaoEditado(e.target.value)}
+                            />
                         ) : (
+                            <span>{cot.indicador.nome} - {formatarValor(cot.valor)} - {formatarData(cot.data)}</span>
+                        )}
+                        <div style={{ display: "flex", gap: "5px" }}>
+                            {editandoCotacaoId === cot.id ? (
+                                <button style={{
+                                    backgroundColor: "#08a88a",
+                                    border: "none",
+                                    borderRadius: "50px",
+                                    width: "80px",
+                                    height: "40px",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    cursor: "pointer",
+                                    color: "#fff"
+                                }} onClick={() => onEditar(cot.id)}>Salvar</button>
+                            ) : (
+                                <button style={{
+                                    backgroundColor: "#08a88a",
+                                    border: "none",
+                                    borderRadius: "50px",
+                                    width: "80px",
+                                    height: "40px",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    cursor: "pointer",
+                                    color: "#fff"
+                                }} onClick={() => {
+                                    setEditandoCotacaoId(cot.id);
+                                    setValorCotacaoEditado(cot.valor);
+                                }}>
+                                    <Pencil size={20} />
+                                </button>
+                            )}
                             <button style={{
-                                backgroundColor: "#222",
+                                backgroundColor: "#08a88a",
                                 border: "none",
                                 borderRadius: "50px",
                                 width: "80px",
@@ -82,28 +98,21 @@ export default function CotacaoList({
                                 justifyContent: "center",
                                 cursor: "pointer",
                                 color: "#fff"
-                            }} onClick={() => {
-                                setEditandoCotacaoId(cot.id);
-                                setValorCotacaoEditado(cot.valor);
-                            }}>
-                                <Pencil size={20} />
+                            }} onClick={() => onExcluir(cot.id)}>
+                                <Trash size={20} />
                             </button>
-                        )}
-                        <button style={{
-                            backgroundColor: "#222",
-                            border: "none",
-                            borderRadius: "50px",
-                            width: "80px",
-                            height: "40px",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            cursor: "pointer",
-                            color: "#fff"
-                        }} onClick={() => onExcluir(cot.id)}>
-                            <Trash size={20} />
-                        </button>
+                        </div>
                     </div>
+
+                    {index < cotacoes.length - 1 && (
+                        <hr style={{
+                            border: "0",
+                            height: "1px",
+                            backgroundColor: "#ccc",
+                            width: "90%",
+                            margin: "5px auto"
+                        }} />
+                    )}
                 </div>
             ))}
         </div>

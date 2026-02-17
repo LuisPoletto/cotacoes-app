@@ -1,5 +1,6 @@
-// Home.jsx
+// Home.jsx~
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 
 import * as IndicadorAPI from "./api/indicadorService";
 import * as CotacaoAPI from "./api/cotacaoService";
@@ -8,6 +9,23 @@ import IndicadorForm from "./components/IndicadorForm";
 import IndicadorList from "./components/IndicadorList";
 import CotacaoForm from "./components/CotacaoForm";
 import CotacaoList from "./components/CotacaoList";
+
+function AnimatedTitle({ title, delay = 0 }) {
+  return (
+    <motion.h1
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{
+        duration: 1.2,
+        delay: delay,
+        ease: "easeOut"
+      }}
+      style={{ color: "#08a88a", marginTop: "10px", fontSize: "3rem" }}
+    >
+      {title}
+    </motion.h1>
+  );
+}
 
 export default function Home() {
   const [indicadores, setIndicadores] = useState([]);
@@ -83,9 +101,40 @@ export default function Home() {
       alignItems: "center",
       justifyContent: "center",
       width: "100vw",
-      height: "100vw",
-      backgroundColor: "#222",
+      backgroundColor: "#121331",
+      backgroundImage: `
+        linear-gradient(90deg, 
+          #121331 0%, 
+          #0f1c3f 30%, 
+          #0b2a3a 60%, 
+          #0d0e25 100%
+        )
+      `,
+      backgroundAttachment: "fixed",
     }}>
+
+      <div style={{
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "center",
+        alignContent: "center",
+      }}>
+        <lord-icon
+          src="https://cdn.lordicon.com/rpviwvwn.json"
+          trigger="in"
+          state="in-reveal"
+          style={{ width: "100px", height: "100px" }}
+        />
+        <lord-icon
+          src="https://cdn.lordicon.com/lbcxnxti.json"
+          trigger="in"
+          state="in-reveal"
+          style={{ width: "100px", height: "100px" }}
+        />
+      </div>
+
+      <AnimatedTitle title="dt.Analytics" delay={0.1} />
+
       <h1 style={{ color: "#fff" }}>Novo Indicador</h1>
       <IndicadorForm nome={nomeIndicador} setNome={setNomeIndicador} onSalvar={handleSalvarIndicador} />
 

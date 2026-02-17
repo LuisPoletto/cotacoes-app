@@ -28,7 +28,8 @@ export default function IndicadorList({ indicadores, editandoId, setEditandoId, 
                         )}
                         <div style={{ display: "flex", gap: "5px" }}>
                             <button onClick={() => { setEditandoId(ind.id); setNomeEditado(ind.nome); }} style={{
-                                backgroundColor: "#222",
+                                backgroundColor: "#08a88a",
+                                color: "#fff",
                                 border: "none",
                                 borderRadius: "50px",
                                 width: "80px",
@@ -42,7 +43,8 @@ export default function IndicadorList({ indicadores, editandoId, setEditandoId, 
                             </button>
                             {editandoId === ind.id && (
                                 <button onClick={() => onEditar(ind.id)} style={{
-                                    backgroundColor: "#222",
+                                    backgroundColor: "#08a88a",
+                                    color: "#fff",
                                     border: "none",
                                     borderRadius: "50px",
                                     width: "80px",
@@ -54,7 +56,8 @@ export default function IndicadorList({ indicadores, editandoId, setEditandoId, 
                                 }}>Salvar</button>
                             )}
                             <button onClick={() => onExcluir(ind.id)} style={{
-                                backgroundColor: "#222",
+                                backgroundColor: "#08a88a",
+                                color: "#fff",
                                 border: "none",
                                 borderRadius: "50px",
                                 width: "80px",
