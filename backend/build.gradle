@@ -14,10 +14,20 @@ repositories {
 dependencies {
     annotationProcessor("io.micronaut:micronaut-http-validation")
     annotationProcessor("io.micronaut.serde:micronaut-serde-processor")
+
+    annotationProcessor("io.micronaut.data:micronaut-data-processor")
+
     implementation("io.micronaut.serde:micronaut-serde-jackson")
+
+    implementation("io.micronaut.data:micronaut-data-jdbc")
+    implementation("io.micronaut.sql:micronaut-jdbc-hikari")
+
     compileOnly("io.micronaut:micronaut-http-client")
     runtimeOnly("org.yaml:snakeyaml")
     runtimeOnly("ch.qos.logback:logback-classic")
+
+    runtimeOnly("org.postgresql:postgresql")
+
     testImplementation("io.micronaut:micronaut-http-client")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }

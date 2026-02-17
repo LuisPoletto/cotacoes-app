@@ -1,0 +1,28 @@
+version: "3.9"
+
+services:
+  cotacoes-postgres:
+    # 2 espaços de recuo
+    image: postgres:16
+    container_name: cotacoes-postgres
+    environment:
+      POSTGRES_DB: cotacoes
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  backend-container:
+    build: ./backend
+    container_name: backend-container
+    depends_on:
+      - cotacoes-postgres
+    ports:
+      - "8080:8080"
+    environment:
+      DB_HOST: cotacoes-postgres
+
+volumes:
+  postgres_data:

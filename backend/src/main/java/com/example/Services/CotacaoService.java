@@ -1,51 +1,47 @@
-package com.example.Services;
+package com.example.services;
 
-import com.example.Responses.CotacaoResponse;
-import com.example.Responses.IndicadorResponse;
+import com.example.entities.*;
+import com.example.repositories.CotacaoRepository;
+import com.example.repositories.IndicadorRepository;
 
 import jakarta.inject.Singleton;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 @Singleton
 public class CotacaoService {
 
-    private final List<CotacaoResponse> cotacoes = new ArrayList<>();
-    private final IndicadorService indicadorService;
+    private final CotacaoRepository repository;
+    private final IndicadorRepository indicadorRepository;
 
-    public CotacaoService(IndicadorService indicadorService) {
-        this.indicadorService = indicadorService;
+    public CotacaoService(CotacaoRepository repository, IndicadorRepository indicadorRepository) {
+        this.repository = repository;
+        this.indicadorRepository = indicadorRepository;
     }
 
-    public CotacaoResponse salvar(CotacaoResponse cotacao) {
-        IndicadorResponse ind = indicadorService.buscarPorId(cotacao.getIndicador().getId());
-        if (ind == null) {
-            throw new RuntimeException("Indicador não encontrado!");
-        }
-        cotacao.setId(UUID.randomUUID().toString());
+    public Cotacao salvar(Cotacao cotacao) {
+        Indicador ind = indicadorRepository.findById(cotacao.getIndicador().getId())
+        .orElseThrow(() -> new RuntimeException("Indicador não encontrado!"));
+
+        cotacao.setId(UUID.randomUUID());
         cotacao.setIndicador(ind);
-
-        cotacoes.add(cotacao);
-        return cotacao;
+        return repository.save(cotacao);
     }
-    
-    public CotacaoResponse editar(String id, CotacaoResponse novo) {
-        for (CotacaoResponse cot : cotacoes) {
-            if (cot.getId().equals(id)) {
-                cot.setValor(novo.getValor());
-                return cot;
-            }
+
+     public Cotacao editar(UUID id, Cotacao novo) {
+        if (repository.existsById(id)) {
+            novo.setId(id);
+            return repository.update(novo);
         }
         return null;
     }
 
-    public void excluir(String id) {
-        cotacoes.removeIf(cot -> cot.getId().equals(id));
+    public List<Cotacao> listar() {
+        return (List<Cotacao>) repository.findAll();
     }
 
-    public List<CotacaoResponse> listar() {
-        return cotacoes;
+    public void excluir(UUID id) {
+        repository.deleteById(id);
     }
 }

@@ -1,45 +1,43 @@
-package com.example.Services;
+package com.example.services;
 
-import com.example.Responses.IndicadorResponse;
+import com.example.entities.Indicador;
+import com.example.repositories.IndicadorRepository;
 import jakarta.inject.Singleton;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 @Singleton
 public class IndicadorService {
+    private final IndicadorRepository repository;
 
-    private final List<IndicadorResponse> indicadores = new ArrayList<>();
-
-    public IndicadorResponse salvar(IndicadorResponse indicador) {
-        indicador.setId(UUID.randomUUID().toString());
-        indicadores.add(indicador);
-        return indicador;
+    public IndicadorService(IndicadorRepository repository) {
+        this.repository = repository;
     }
 
-    public List<IndicadorResponse> listar() {
-        return indicadores;
+    public Indicador salvar(Indicador indicador) {
+        if (indicador.getId() == null) {
+            indicador.setId(UUID.randomUUID());
+        }
+        return repository.save(indicador);
     }
 
-    public IndicadorResponse editar(String id, IndicadorResponse novo) {
-        for (IndicadorResponse ind : indicadores) {
-            if (ind.getId().equals(id)) {
-                ind.setNome(novo.getNome());
-                return ind;
-            }
+    public List<Indicador> listar() {
+        return (List<Indicador>) repository.findAll();
+    }
+
+    public Indicador editar(UUID id, Indicador novo) {
+        if (repository.existsById(id)) {
+            novo.setId(id);
+            return repository.update(novo);
         }
         return null;
     }
 
-    public void excluir(String id) {
-        indicadores.removeIf(ind -> ind.getId().equals(id));
+    public void excluir(UUID id) {
+        repository.deleteById(id);
     }
 
-    public IndicadorResponse buscarPorId(String id) {
-        return indicadores.stream()
-                .filter(i -> i.getId().equals(id))
-                .findFirst()
-                .orElse(null);
+    public Indicador buscarPorId(UUID id) {
+        return repository.findById(id).orElse(null);
     }
 }

@@ -1,4 +1,16 @@
 micronaut:
+  data:
+    jdbc:
+      dialect: POSTGRES
   server:
     cors:
       enabled: true
+
+datasources:
+  default:
+    url: jdbc:postgresql://${DB_HOST:localhost}:5432/cotacoes
+    driverClassName: org.postgresql.Driver
+    username: postgres
+    password: postgres
+    schema-generate: UPDATE
+    dialect: POSTGRES

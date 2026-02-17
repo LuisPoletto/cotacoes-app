@@ -1,10 +1,10 @@
-package com.example.Controllers;
+package com.example.controllers;
 
-import com.example.Responses.CotacaoResponse;
-import com.example.Services.CotacaoService;
+import com.example.entities.Cotacao;
+import com.example.services.CotacaoService;
 import io.micronaut.http.annotation.*;
-
 import java.util.List;
+import java.util.UUID;
 
 @Controller("/cotacoes")
 public class CotacaoController {
@@ -16,22 +16,22 @@ public class CotacaoController {
     }
 
     @Post
-    public CotacaoResponse salvar(@Body CotacaoResponse cotacao) {
+    public Cotacao salvar(@Body Cotacao cotacao) {
         return service.salvar(cotacao);
     }
 
     @Get
-    public List<CotacaoResponse> listar() {
+    public List<Cotacao> listar() {
         return service.listar();
     }
 
     @Put("/{id}")
-    public CotacaoResponse editar(String id, @Body CotacaoResponse cotacao) {
+    public Cotacao editar(@PathVariable UUID id, @Body Cotacao cotacao) {
         return service.editar(id, cotacao);
     }
 
     @Delete("/{id}")
-    public void excluir(String id) {
+    public void excluir(@PathVariable UUID id) {
         service.excluir(id);
     }
 }
