@@ -11,23 +11,7 @@ import CotacaoForm from "./components/CotacaoForm";
 import CotacaoList from "./components/CotacaoList";
 import { GraficoCotacoes } from "./components/GraficoCotacoes";
 import GraficoForm from "./components/GraficoForm";
-
-function AnimatedTitle({ title, delay = 0 }) {
-  return (
-    <motion.h1
-      initial={{ opacity: 0, y: -20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{
-        duration: 1.2,
-        delay: delay,
-        ease: "easeOut"
-      }}
-      style={{ color: "#08a88a", marginTop: "10px", fontSize: "3rem" }}
-    >
-      {title}
-    </motion.h1>
-  );
-}
+import AnimatedTitle from "./components/AnimatedTitle";
 
 export default function Home() {
   const [indicadores, setIndicadores] = useState([]);
@@ -42,6 +26,10 @@ export default function Home() {
   // Estados para edição de cotações
   const [editandoCotacaoId, setEditandoCotacaoId] = useState(null);
   const [valorCotacaoEditado, setValorCotacaoEditado] = useState("");
+
+  // Estados para dataInicial e dataFinal
+  const [dataInicial, setDataInicial] = useState("")
+  const [dataFinal, setDataFinal] = useState("")
 
   useEffect(() => {
     carregarIndicadores();
@@ -97,6 +85,16 @@ export default function Home() {
     carregarCotacoes();
   }
 
+  async function carregarCotacoesFiltradas() {
+    if (indicadorSelecionado && dataInicial && dataFinal) {
+      const dataIni = dataInicial.toISOSting();
+      const dataFim = dataFinal.toISOString();
+
+      const data = await CotacaoAPI.buscarCotacaoesFiltradas(indicadorSelecionado, dataIni, dataFim);
+      setCotacoes(data);
+    }
+  }
+
   useEffect(() => {
     console.log("Selecionado:", indicadorSelecionado);
     console.log("Indicadores:", indicadores);
@@ -116,6 +114,10 @@ export default function Home() {
       setNomeIndicadorSelecionado(indicador.nome);
     }
   }, [indicadorSelecionado, indicadores]);
+
+  useEffect(() => {
+    carregarCotacoesFiltradas();
+  }, [indicadorSelecionado, dataInicial, dataFinal]);
 
 
   return (
@@ -204,9 +206,10 @@ export default function Home() {
           indicadores={indicadores}
           indicadorSelecionado={indicadorSelecionado}
           setIndicadorSelecionado={setIndicadorSelecionado}
-          valorCotacao={valorCotacao}
-          setValorCotacao={setValorCotacao}
-          onSalvar={handleSalvarCotacao}></GraficoForm>
+          dataInicial={dataInicial}
+          setDataInicial={setDataInicial}
+          dataFinal={dataFinal}
+          setDataFinal={setDataFinal}></GraficoForm>
         <h1 style={{ color: "#fff", fontSize: "2rem" }}>{nomeIndicadorSelecionado}</h1>
       </div>
       <div style={{
