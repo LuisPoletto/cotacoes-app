@@ -9,6 +9,8 @@ import IndicadorForm from "./components/IndicadorForm";
 import IndicadorList from "./components/IndicadorList";
 import CotacaoForm from "./components/CotacaoForm";
 import CotacaoList from "./components/CotacaoList";
+import { GraficoCotacoes } from "./components/GraficoCotacoes";
+import GraficoForm from "./components/GraficoForm";
 
 function AnimatedTitle({ title, delay = 0 }) {
   return (
@@ -35,6 +37,7 @@ export default function Home() {
   const [nomeEditado, setNomeEditado] = useState("");
   const [indicadorSelecionado, setIndicadorSelecionado] = useState("");
   const [valorCotacao, setValorCotacao] = useState("");
+  const [nomeIndicadorSelecionado, setNomeIndicadorSelecionado] = useState("");
 
   // Estados para edição de cotações
   const [editandoCotacaoId, setEditandoCotacaoId] = useState(null);
@@ -93,6 +96,27 @@ export default function Home() {
     await CotacaoAPI.excluirCotacao(id);
     carregarCotacoes();
   }
+
+  useEffect(() => {
+    console.log("Selecionado:", indicadorSelecionado);
+    console.log("Indicadores:", indicadores);
+
+    if (!indicadorSelecionado) {
+      setNomeIndicadorSelecionado("");
+      return;
+    }
+
+    const indicador = indicadores.find(
+      (ind) => ind.id === indicadorSelecionado
+    );
+
+    console.log("Encontrado:", indicador);
+
+    if (indicador) {
+      setNomeIndicadorSelecionado(indicador.nome);
+    }
+  }, [indicadorSelecionado, indicadores]);
+
 
   return (
     <div style={{
@@ -169,6 +193,32 @@ export default function Home() {
         onEditar={handleEditarCotacao}
         onExcluir={handleExcluirCotacao}
       />
+
+      <div style={{
+        display: "flex",
+        alignItems: "center",
+        flexDirection: "column",
+      }}>
+        <h1 style={{ color: "#fff" }}>Gráfico de Cotações</h1>
+        <GraficoForm
+          indicadores={indicadores}
+          indicadorSelecionado={indicadorSelecionado}
+          setIndicadorSelecionado={setIndicadorSelecionado}
+          valorCotacao={valorCotacao}
+          setValorCotacao={setValorCotacao}
+          onSalvar={handleSalvarCotacao}></GraficoForm>
+        <h1 style={{ color: "#fff", fontSize: "2rem" }}>{nomeIndicadorSelecionado}</h1>
+      </div>
+      <div style={{
+        display: "flex",
+        width: "80vw",
+        paddingBottom: "40px",
+      }}>
+        <GraficoCotacoes
+          cotacoes={cotacoes}
+          indicadorId={indicadorSelecionado}
+        />
+      </div>
     </div>
   );
 }

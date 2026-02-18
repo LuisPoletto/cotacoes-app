@@ -10,8 +10,14 @@ export default function IndicadorList({ indicadores, editandoId, setEditandoId, 
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            padding: "10px 0"
+            padding: "10px 0",
+            boxShadow: "0 4px 10px rgba(0,0,0,0.2)"
         }}>
+
+            {indicadores.length == 0 && (
+                <h1 style={{ fontSize: "1.5rem", color: "#777" }}>Nenhum Indicador registrado!</h1>
+            )}
+
             {indicadores.map((ind, index) => (
                 <div key={ind.id} style={{ width: "90%" }}>
                     <div style={{

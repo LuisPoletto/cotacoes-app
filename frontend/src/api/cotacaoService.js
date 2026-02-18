@@ -30,3 +30,11 @@ export async function editarCotacao(id, valor) {
 export async function excluirCotacao(id) {
     await fetch(`${API_BASE}/cotacoes/${id}`, { method: "DELETE" });
 }
+
+export async function buscarCotacaoesFiltradas(indicadorId, dataInicio, dataFim) {
+    const res = await fetch(
+        `${API_BASE}/cotacoes/buscar?indicadorId=${indicadorId}&inicio=${dataInicio}&fim=${dataFim}`
+    );
+
+    return res.json();
+}

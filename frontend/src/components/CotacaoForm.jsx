@@ -61,12 +61,12 @@ export default function CotacaoForm({
                         style={{
                             width: "100%",
                             height: "40px",
-                            textAlign: "center",
                             backgroundColor: "transparent",
                             border: "none",
                             outline: "none",
                             color: "#222",
                             fontSize: "18px",
+                            paddingLeft: "15px"
                         }}
                     />
                     <button

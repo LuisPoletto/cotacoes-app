@@ -44,4 +44,8 @@ public class CotacaoService {
     public void excluir(UUID id) {
         repository.deleteById(id);
     }
+
+    public List<Cotacao> buscarPorIndAndData(UUID indicadorId, String dataInicio, String dataFim) {
+        return repository.findByIndicadorIdAndDataBetween(indicadorId, dataInicio, dataFim);
+    }
 }

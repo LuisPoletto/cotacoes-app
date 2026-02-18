@@ -14,4 +14,7 @@ public interface CotacaoRepository extends CrudRepository<Cotacao, UUID> {
 
     @Join(value = "indicador", type = Join.Type.FETCH)
     List<Cotacao> list();
+
+    @Join(value = "indicador", type = Join.Type.FETCH)
+    List<Cotacao> findByIndicadorIdAndDataBetween(UUID indicadorId, String dataInicio, String dataFim);
 }

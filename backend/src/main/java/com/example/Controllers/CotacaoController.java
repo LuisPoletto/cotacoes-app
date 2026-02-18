@@ -34,4 +34,12 @@ public class CotacaoController {
     public void excluir(@PathVariable UUID id) {
         service.excluir(id);
     }
+
+    @Get("/buscar")
+    public List<Cotacao> buscar(
+            @QueryValue UUID indicadorId,
+            @QueryValue String dataInicio,
+            @QueryValue String dataFim) {
+        return service.buscarPorIndAndData(indicadorId, dataInicio, dataFim);
+    }
 }

@@ -33,8 +33,14 @@ export default function CotacaoList({
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            padding: "10px 0"
+            padding: "10px 0",
+            boxShadow: "0 4px 10px rgba(0,0,0,0.2)"
         }}>
+
+            {cotacoes.length == 0 && (
+                <h1 style={{ fontSize: "1.5rem", color: "#777" }}>Nenhum Indicador registrado!</h1>
+            )}
+
             {cotacoes.map((cot, index) => (
                 <div key={cot.id} style={{ width: "100%" }}>
                     <div style={{
