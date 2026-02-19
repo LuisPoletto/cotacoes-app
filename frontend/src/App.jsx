@@ -1,4 +1,3 @@
-// Home.jsx~
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 
@@ -12,24 +11,24 @@ import CotacaoList from "./components/CotacaoList";
 import { GraficoCotacoes } from "./components/GraficoCotacoes";
 import GraficoForm from "./components/GraficoForm";
 import AnimatedTitle from "./components/AnimatedTitle";
+import EditCotacaoModal from "./components/EditCotacaoModal";
+import DateFormat from "./formaters/DateFormater";
 
 export default function Home() {
   const [indicadores, setIndicadores] = useState([]);
   const [cotacoes, setCotacoes] = useState([]);
   const [nomeIndicador, setNomeIndicador] = useState("");
-  const [editandoId, setEditandoId] = useState(null);
-  const [nomeEditado, setNomeEditado] = useState("");
   const [indicadorSelecionado, setIndicadorSelecionado] = useState("");
   const [valorCotacao, setValorCotacao] = useState("");
   const [nomeIndicadorSelecionado, setNomeIndicadorSelecionado] = useState("");
 
-  // Estados para edição de cotações
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [editandoCotacaoId, setEditandoCotacaoId] = useState(null);
   const [valorCotacaoEditado, setValorCotacaoEditado] = useState("");
+  const [dataRegistro, setDataRegistro] = useState("");
 
-  // Estados para dataInicial e dataFinal
-  const [dataInicial, setDataInicial] = useState("")
-  const [dataFinal, setDataFinal] = useState("")
+  const [dataInicial, setDataInicial] = useState(null);
+  const [dataFinal, setDataFinal] = useState(null);
 
   useEffect(() => {
     carregarIndicadores();
@@ -46,26 +45,27 @@ export default function Home() {
     setCotacoes(data);
   }
 
-  // Indicadores
   async function handleSalvarIndicador() {
     await IndicadorAPI.salvarIndicador(nomeIndicador);
     setNomeIndicador("");
     carregarIndicadores();
   }
 
-  async function handleEditarIndicador(id) {
-    await IndicadorAPI.editarIndicador(id, nomeEditado);
-    setEditandoId(null);
-    setNomeEditado("");
+  async function handleEditarIndicador(id, novoNome) {
+    await IndicadorAPI.editarIndicador(id, novoNome);
     carregarIndicadores();
   }
 
   async function handleExcluirIndicador(id) {
     await IndicadorAPI.excluirIndicador(id);
+    if (indicadorSelecionado == id) {
+      setIndicadorSelecionado("");
+      setNomeIndicadorSelecionado("");
+    }
     carregarIndicadores();
+    carregarCotacoes();
   }
 
-  // Cotações
   async function handleSalvarCotacao() {
     await CotacaoAPI.salvarCotacao(indicadorSelecionado, valorCotacao);
     setValorCotacao("");
@@ -73,10 +73,20 @@ export default function Home() {
     carregarCotacoes();
   }
 
-  async function handleEditarCotacao(id) {
-    await CotacaoAPI.editarCotacao(id, valorCotacaoEditado);
+  function handleAbrirEditarCotacao(cotacao) {
+    setEditandoCotacaoId(cotacao.id);
+    setValorCotacaoEditado(cotacao.valor);
+    setIndicadorSelecionado(cotacao.indicador.id);
+    if (cotacao.data) {
+      setDataRegistro(new Date(cotacao.data).toISOString().split('T')[0]);
+    }
+    setIsModalOpen(true);
+  }
+
+  async function handleConfirmarEdicao() {
+    await CotacaoAPI.editarCotacao(editandoCotacaoId, valorCotacaoEditado);
+    setIsModalOpen(false);
     setEditandoCotacaoId(null);
-    setValorCotacaoEditado("");
     carregarCotacoes();
   }
 
@@ -87,29 +97,28 @@ export default function Home() {
 
   async function carregarCotacoesFiltradas() {
     if (indicadorSelecionado && dataInicial && dataFinal) {
-      const dataIni = dataInicial.toISOSting();
-      const dataFim = dataFinal.toISOString();
+      const dataIni = dataInicial.toISOString().split('T')[0];
+      const dataFim = dataFinal.toISOString().split('T')[0];
 
-      const data = await CotacaoAPI.buscarCotacaoesFiltradas(indicadorSelecionado, dataIni, dataFim);
-      setCotacoes(data);
+      try {
+        const data = await CotacaoAPI.buscarCotacaoesFiltradas(indicadorSelecionado, dataIni, dataFim);
+        if (Array.isArray(data)) {
+          setCotacoes(data);
+        } else {
+          setCotacoes([]);
+        }
+      } catch (error) {
+        setCotacoes([]);
+      }
     }
   }
 
   useEffect(() => {
-    console.log("Selecionado:", indicadorSelecionado);
-    console.log("Indicadores:", indicadores);
-
     if (!indicadorSelecionado) {
       setNomeIndicadorSelecionado("");
       return;
     }
-
-    const indicador = indicadores.find(
-      (ind) => ind.id === indicadorSelecionado
-    );
-
-    console.log("Encontrado:", indicador);
-
+    const indicador = indicadores.find((ind) => ind.id === indicadorSelecionado);
     if (indicador) {
       setNomeIndicadorSelecionado(indicador.nome);
     }
@@ -119,7 +128,6 @@ export default function Home() {
     carregarCotacoesFiltradas();
   }, [indicadorSelecionado, dataInicial, dataFinal]);
 
-
   return (
     <div style={{
       display: "flex",
@@ -128,35 +136,13 @@ export default function Home() {
       justifyContent: "center",
       width: "100vw",
       backgroundColor: "#121331",
-      backgroundImage: `
-        linear-gradient(90deg, 
-          #121331 0%, 
-          #0f1c3f 30%, 
-          #0b2a3a 60%, 
-          #0d0e25 100%
-        )
-      `,
+      backgroundImage: `linear-gradient(90deg, #121331 0%, #0f1c3f 30%, #0b2a3a 60%, #0d0e25 100%)`,
       backgroundAttachment: "fixed",
     }}>
 
-      <div style={{
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "center",
-        alignContent: "center",
-      }}>
-        <lord-icon
-          src="https://cdn.lordicon.com/rpviwvwn.json"
-          trigger="in"
-          state="in-reveal"
-          style={{ width: "100px", height: "100px" }}
-        />
-        <lord-icon
-          src="https://cdn.lordicon.com/lbcxnxti.json"
-          trigger="in"
-          state="in-reveal"
-          style={{ width: "100px", height: "100px" }}
-        />
+      <div style={{ display: "flex", flexDirection: "row", justifyContent: "center", alignContent: "center" }}>
+        <lord-icon src="https://cdn.lordicon.com/rpviwvwn.json" trigger="in" state="in-reveal" style={{ width: "100px", height: "100px" }} />
+        <lord-icon src="https://cdn.lordicon.com/lbcxnxti.json" trigger="in" state="in-reveal" style={{ width: "100px", height: "100px" }} />
       </div>
 
       <AnimatedTitle title="dt.Analytics" delay={0.1} />
@@ -165,15 +151,7 @@ export default function Home() {
       <IndicadorForm nome={nomeIndicador} setNome={setNomeIndicador} onSalvar={handleSalvarIndicador} />
 
       <h1 style={{ color: "#fff" }}>Lista Indicadores</h1>
-      <IndicadorList
-        indicadores={indicadores}
-        editandoId={editandoId}
-        setEditandoId={setEditandoId}
-        nomeEditado={nomeEditado}
-        setNomeEditado={setNomeEditado}
-        onEditar={handleEditarIndicador}
-        onExcluir={handleExcluirIndicador}
-      />
+      <IndicadorList indicadores={indicadores} onEditar={handleEditarIndicador} onExcluir={handleExcluirIndicador} />
 
       <h1 style={{ color: "#fff" }}>Nova Cotação</h1>
       <CotacaoForm
@@ -188,19 +166,11 @@ export default function Home() {
       <h1 style={{ color: "#fff" }}>Lista Cotações</h1>
       <CotacaoList
         cotacoes={cotacoes}
-        editandoCotacaoId={editandoCotacaoId}
-        setEditandoCotacaoId={setEditandoCotacaoId}
-        valorCotacaoEditado={valorCotacaoEditado}
-        setValorCotacaoEditado={setValorCotacaoEditado}
-        onEditar={handleEditarCotacao}
+        onAbrirEditar={handleAbrirEditarCotacao}
         onExcluir={handleExcluirCotacao}
       />
 
-      <div style={{
-        display: "flex",
-        alignItems: "center",
-        flexDirection: "column",
-      }}>
+      <div style={{ display: "flex", alignItems: "center", flexDirection: "column" }}>
         <h1 style={{ color: "#fff" }}>Gráfico de Cotações</h1>
         <GraficoForm
           indicadores={indicadores}
@@ -209,19 +179,31 @@ export default function Home() {
           dataInicial={dataInicial}
           setDataInicial={setDataInicial}
           dataFinal={dataFinal}
-          setDataFinal={setDataFinal}></GraficoForm>
-        <h1 style={{ color: "#fff", fontSize: "2rem" }}>{nomeIndicadorSelecionado}</h1>
-      </div>
-      <div style={{
-        display: "flex",
-        width: "80vw",
-        paddingBottom: "40px",
-      }}>
-        <GraficoCotacoes
-          cotacoes={cotacoes}
-          indicadorId={indicadorSelecionado}
+          setDataFinal={setDataFinal}
         />
       </div>
+
+      <div style={{ display: "flex", alignItems: "center", flexDirection: "column", width: "70vw", paddingBottom: "40px", paddingTop: "30px" }}>
+        {indicadorSelecionado !== "" && dataInicial !== null && dataFinal !== null && (
+          <h1 style={{ color: "#fff", fontSize: "1.7rem" }}>
+            {nomeIndicadorSelecionado} | De {DateFormat.format(dataInicial)} a {DateFormat.format(dataFinal)}
+          </h1>
+        )}
+        <GraficoCotacoes cotacoes={cotacoes} indicadorId={indicadorSelecionado} />
+      </div>
+
+      <EditCotacaoModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onConfirm={handleConfirmarEdicao}
+        indicadores={indicadores}
+        indicadorSelecionado={indicadorSelecionado}
+        setIndicadorSelecionado={setIndicadorSelecionado}
+        valorCotacaoEditado={valorCotacaoEditado}
+        setValorCotacaoEditado={setValorCotacaoEditado}
+        dataRegistro={dataRegistro}
+        setDataRegistro={setDataRegistro}
+      />
     </div>
   );
 }

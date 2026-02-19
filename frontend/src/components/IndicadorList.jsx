@@ -1,6 +1,37 @@
 import { Pencil, Trash } from "lucide-react";
+import EditIndicadorModal from "./EditIndicadorModal";
+import { useState } from "react";
+import DeleteIndicadorModal from "./DeleteIndicadorModal";
 
-export default function IndicadorList({ indicadores, editandoId, setEditandoId, nomeEditado, setNomeEditado, onEditar, onExcluir }) {
+export default function IndicadorList({ indicadores, onEditar, onExcluir }) {
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [tempNome, setTempNome] = useState("");
+    const [tempId, setTempId] = useState(null);
+    const [indicadorParaDeletar, setIndicadorParaDeletar] = useState(null);
+
+    const abrirEdicao = (ind) => {
+        setTempId(ind.id);
+        setTempNome(ind.nome);
+        setIsModalOpen(true);
+    };
+
+    const confirmarEdicao = () => {
+        onEditar(tempId, tempNome);
+        setIsModalOpen(false);
+    };
+
+    const abrirConfirmacaoDelete = (ind) => {
+        setTempId(ind.id);
+        setIndicadorParaDeletar(ind);
+        setIsDeleteModalOpen(true);
+    };
+
+    const confirmarDelete = () => {
+        onExcluir(tempId);
+        setIsDeleteModalOpen(false);
+    }
+
     return (
         <div style={{
             backgroundColor: "#fff",
@@ -11,8 +42,23 @@ export default function IndicadorList({ indicadores, editandoId, setEditandoId, 
             flexDirection: "column",
             alignItems: "center",
             padding: "10px 0",
-            boxShadow: "0 4px 10px rgba(0,0,0,0.2)"
+            boxShadow: "0 4px 10px rgba(0,0,0,0.2)",
+            borderRadius: "50px",
         }}>
+            <EditIndicadorModal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                nome={tempNome}
+                setNome={setTempNome}
+                onConfirm={confirmarEdicao}
+            />
+
+            <DeleteIndicadorModal
+                isOpen={isDeleteModalOpen}
+                onClose={() => setIsDeleteModalOpen(false)}
+                onConfirm={confirmarDelete}
+                indicador={indicadorParaDeletar || { nome: "" }}
+            />
 
             {indicadores.length == 0 && (
                 <h1 style={{ fontSize: "1.5rem", color: "#777" }}>Nenhum Indicador registrado!</h1>
@@ -27,13 +73,11 @@ export default function IndicadorList({ indicadores, editandoId, setEditandoId, 
                         alignItems: "center",
                         padding: "5px 0"
                     }}>
-                        {editandoId === ind.id ? (
-                            <input value={nomeEditado} onChange={e => setNomeEditado(e.target.value)} />
-                        ) : (
-                            <span>{ind.nome}</span>
-                        )}
+
+                        <span>{ind.nome}</span>
+
                         <div style={{ display: "flex", gap: "5px" }}>
-                            <button onClick={() => { setEditandoId(ind.id); setNomeEditado(ind.nome); }} style={{
+                            <button onClick={() => abrirEdicao(ind)} style={{
                                 backgroundColor: "#08a88a",
                                 color: "#fff",
                                 border: "none",
@@ -47,21 +91,7 @@ export default function IndicadorList({ indicadores, editandoId, setEditandoId, 
                             }}>
                                 <Pencil size={20} />
                             </button>
-                            {editandoId === ind.id && (
-                                <button onClick={() => onEditar(ind.id)} style={{
-                                    backgroundColor: "#08a88a",
-                                    color: "#fff",
-                                    border: "none",
-                                    borderRadius: "50px",
-                                    width: "80px",
-                                    height: "40px",
-                                    display: "flex",
-                                    alignItems: "center",
-                                    justifyContent: "center",
-                                    cursor: "pointer",
-                                }}>Salvar</button>
-                            )}
-                            <button onClick={() => onExcluir(ind.id)} style={{
+                            <button onClick={() => abrirConfirmacaoDelete(ind)} style={{
                                 backgroundColor: "#08a88a",
                                 color: "#fff",
                                 border: "none",

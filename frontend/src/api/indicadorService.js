@@ -20,7 +20,7 @@ export async function editarIndicador(id, nome) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ nome })
     });
-    return res.json;
+    return res.json();
 }
 
 export async function excluirIndicador(id) {

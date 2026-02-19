@@ -10,12 +10,32 @@ export function GraficoCotacoes({ cotacoes, indicadorId }) {
         }))
         .sort((a, b) => a.timestamp - b.timestamp);
 
+    const obterTicks = () => {
+        if (dadosFormatados.length == 0) return [];
+        if (dadosFormatados.length <= 5) return dadosFormatados.map(d => d.data);
+
+        const pontos = [];
+        const total = dadosFormatados.length;
+
+        for (let i = 0; i < 5; i++) {
+            const index = Math.min(
+                Math.floor((i * (total - 1)) / 4),
+                total - 1
+            );
+
+            pontos.push(dadosFormatados[index].data);
+        }
+        return pontos;
+    };
+
+    const ticksCustomizados = obterTicks();
+
     return (
         <div style={{ width: '100%', height: 400, backgroundColor: 'rgba(255,255,255,0.05)', borderRadius: '8px', padding: '20px' }}>
             <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={dadosFormatados}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#444" />
-                    <XAxis dataKey="data" stroke="#ccc" />
+                    <XAxis dataKey="data" stroke="#ccc" ticks={ticksCustomizados} />
                     <YAxis stroke="#ccc" />
                     <Tooltip
                         formatter={(value) => [

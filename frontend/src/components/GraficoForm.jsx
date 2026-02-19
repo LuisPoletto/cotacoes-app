@@ -1,3 +1,4 @@
+import { Calendar } from "lucide-react";
 import React, { useState } from "react";
 import DatePicker from "react-datepicker";
 
@@ -54,6 +55,7 @@ export default function GraficoForm({
             <div style={{ display: "flex", gap: "10px", width: "100%", maxWidth: "500px" }}>
                 <div style={{
                     display: "flex",
+                    alignItems: "center",
                     backgroundColor: "#fff",
                     padding: "8px 12px",
                     borderRadius: "50px",
@@ -61,26 +63,23 @@ export default function GraficoForm({
                     boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
                     border: "1px solid #eee"
                 }}>
+                    <Calendar size={25} color="#08a88a" />
                     <DatePicker
                         selected={dataInicial}
                         onChange={(date) => setDataInicial(date)}
                         placeholderText="Data Inicial"
                         dateFormat="dd/MM/yyyy"
                         className="custom-datepicker"
-                        style={{
-                            width: "100%",
-                            height: "40px",
-                            textAlign: "center",
-                            backgroundColor: "transparent",
-                            border: "none",
-                            outline: "none",
-                            color: "#222",
-                            fontSize: "16px",
+                        onKeyDown={(e) => {
+                            if (e.key != "Tab") {
+                                e.preventDefault();
+                            }
                         }}
                     />
                 </div>
                 <div style={{
                     display: "flex",
+                    alignItems: "center",
                     backgroundColor: "#fff",
                     padding: "8px 12px",
                     borderRadius: "50px",
@@ -88,23 +87,40 @@ export default function GraficoForm({
                     boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
                     border: "1px solid #eee"
                 }}>
+                    <Calendar size={25} color="#08a88a" />
                     <DatePicker
                         selected={dataFinal}
                         onChange={(date) => setDataFinal(date)}
                         placeholderText="Data Final"
                         dateFormat="dd/MM/yyyy"
                         className="custom-datepicker"
-                        style={{
-                            width: "100%",
-                            height: "40px",
-                            textAlign: "center",
-                            backgroundColor: "transparent",
-                            border: "none",
-                            outline: "none",
-                            color: "#222",
-                            fontSize: "16px",
+                        onKeyDown={(e) => {
+                            if (e.key != "Tab") {
+                                e.preventDefault();
+                            }
                         }}
                     />
+                </div>
+                <div style={{
+                    display: "flex",
+                    width: "200px",
+                    height: "50px",
+                    paddingTop: "8px",
+                }}>
+                    <button style={{
+                        backgroundColor: "#08a88a",
+                        color: "#fff",
+                        border: "none",
+                        borderRadius: "50px",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        cursor: "pointer",
+                        alignContent: "center",
+                        fontWeight: "bold",
+                    }}>
+                        Gerar Gráfico
+                    </button>
                 </div>
             </div>
             <style>{`
@@ -117,6 +133,7 @@ export default function GraficoForm({
                     background: transparent;
                     font-size: 16px;
                     cursor: pointer;
+                    color: #222;
                 }
             `}</style>
         </div>

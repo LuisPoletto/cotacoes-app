@@ -2,6 +2,7 @@ package com.example.entities;
 
 import io.micronaut.data.annotation.Id;
 import io.micronaut.data.annotation.MappedEntity;
+import io.micronaut.data.annotation.MappedProperty;
 import io.micronaut.data.annotation.Relation;
 import io.micronaut.serde.annotation.Serdeable;
 import java.util.UUID;
@@ -12,6 +13,7 @@ public class Cotacao {
     @Id
     private UUID id;
     @Relation(Relation.Kind.MANY_TO_ONE)
+    @MappedProperty("indicador_id")
     private Indicador indicador;
     private String valor;
     private String data;

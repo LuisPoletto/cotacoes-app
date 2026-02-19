@@ -8,7 +8,7 @@ export default function IndicadorForm({ nome, setNome, onSalvar }) {
             borderRadius: "50px",
             width: "100%",
             maxWidth: "500px",
-            boxShadow: "0 4px 10px rgba(0,0,0,0.2)"
+            boxShadow: "0 4px 10px rgba(0,0,0,0.2)",
         }}>
             <input
                 placeholder="Nome do Indicador"
