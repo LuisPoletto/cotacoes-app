@@ -84,7 +84,7 @@ export default function CotacaoList({
 
             backgroundColor: "#fff",
 
-            borderRadius: "20px",
+            borderRadius: "35px",
 
             width: "100%",
 

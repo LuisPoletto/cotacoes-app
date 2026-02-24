@@ -30,6 +30,8 @@ export default function Home() {
   const [dataInicial, setDataInicial] = useState(null);
   const [dataFinal, setDataFinal] = useState(null);
 
+  const [cotacoesGrafico, setCotacoesGrafico] = useState([]);
+
   useEffect(() => {
     carregarIndicadores();
     carregarCotacoes();
@@ -71,6 +73,29 @@ export default function Home() {
     setValorCotacao("");
     setIndicadorSelecionado("");
     carregarCotacoes();
+  }
+
+  async function handleGerarGrafico() {
+    if (!indicadorSelecionado || !dataInicial || !dataFinal) return;
+
+    const dataIni = dataInicial.toISOString().split("T")[0];
+    const dataFim = dataFinal.toISOString().split("T")[0];
+
+    try {
+      const data = await CotacaoAPI.buscarCotacaoesFiltradas(
+        indicadorSelecionado,
+        dataIni,
+        dataFim,
+      );
+
+      if (Array.isArray(data)) {
+        setCotacoesGrafico(data);
+      } else {
+        setCotacoesGrafico([]);
+      }
+    } catch (error) {
+      setCotacoesGrafico([]);
+    }
   }
 
   function handleAbrirEditarCotacao(cotacao) {
@@ -124,10 +149,6 @@ export default function Home() {
     }
   }, [indicadorSelecionado, indicadores]);
 
-  useEffect(() => {
-    carregarCotacoesFiltradas();
-  }, [indicadorSelecionado, dataInicial, dataFinal]);
-
   return (
     <div style={{
       display: "flex",
@@ -180,6 +201,7 @@ export default function Home() {
           setDataInicial={setDataInicial}
           dataFinal={dataFinal}
           setDataFinal={setDataFinal}
+          onGerarGrafico={handleGerarGrafico}
         />
       </div>
 
@@ -189,7 +211,7 @@ export default function Home() {
             {nomeIndicadorSelecionado} | De {DateFormat.format(dataInicial)} a {DateFormat.format(dataFinal)}
           </h1>
         )}
-        <GraficoCotacoes cotacoes={cotacoes} indicadorId={indicadorSelecionado} />
+        <GraficoCotacoes cotacoes={cotacoesGrafico} indicadorId={indicadorSelecionado} />
       </div>
 
       <EditCotacaoModal

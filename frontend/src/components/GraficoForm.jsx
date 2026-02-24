@@ -11,7 +11,8 @@ export default function GraficoForm({
     setDataInicial,
     setDataFinal,
     dataInicial,
-    dataFinal
+    dataFinal,
+    onGerarGrafico
 }) {
     return (
         <div style={{
@@ -107,7 +108,7 @@ export default function GraficoForm({
                     height: "50px",
                     paddingTop: "8px",
                 }}>
-                    <button style={{
+                    <button onClick={onGerarGrafico} style={{
                         backgroundColor: "#08a88a",
                         color: "#fff",
                         border: "none",

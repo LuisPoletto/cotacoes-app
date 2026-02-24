@@ -43,7 +43,7 @@ export default function IndicadorList({ indicadores, onEditar, onExcluir }) {
             alignItems: "center",
             padding: "10px 0",
             boxShadow: "0 4px 10px rgba(0,0,0,0.2)",
-            borderRadius: "50px",
+            borderRadius: "35px",
         }}>
             <EditIndicadorModal
                 isOpen={isModalOpen}

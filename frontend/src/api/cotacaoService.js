@@ -33,7 +33,7 @@ export async function excluirCotacao(id) {
 
 export async function buscarCotacaoesFiltradas(indicadorId, dataInicio, dataFim) {
     const res = await fetch(
-        `${API_BASE}/cotacoes/buscar?indicadorId=${indicadorId}&inicio=${dataInicio}&fim=${dataFim}`
+        `${API_BASE}/cotacoes/buscar?indicadorId=${indicadorId}&dataInicio=${dataInicio}&dataFim=${dataFim}`
     );
 
     return res.json();
