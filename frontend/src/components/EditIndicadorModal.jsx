@@ -42,6 +42,11 @@ export default function EditIndicadorModal({ isOpen, onClose, nome, setNome, onC
                     </div>
 
                     <div style={{ padding: "20px 0" }}>
+                        <label style={{
+                            padding: "12px",
+                            color: "#08a88a",
+                            fontWeight: "bold",
+                        }}>Nome do Indicador</label>
                         <input
                             type="text"
                             value={nome}
@@ -73,7 +78,8 @@ export default function EditIndicadorModal({ isOpen, onClose, nome, setNome, onC
                             borderRadius: "8px",
                             border: "none",
                             cursor: "pointer",
-                            backgroundColor: "#222",
+                            color: "#fff",
+                            backgroundColor: "#777",
                             borderRadius: "50px",
                         }}>Cancelar</button>
                         <button onClick={onConfirm} style={{

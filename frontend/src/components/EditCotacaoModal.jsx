@@ -1,5 +1,7 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { X } from "lucide-react";
+import { X, Calendar } from "lucide-react";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 export default function EditCotacaoModal({
     isOpen,
@@ -75,76 +77,105 @@ export default function EditCotacaoModal({
                         flexDirection: "column",
                         gap: "15px"
                     }}>
-
-                        <select
-                            value={indicadorSelecionado}
-                            onChange={(e) =>
-                                setIndicadorSelecionado(e.target.value)
-                            }
-                            style={{
-                                width: "100%",
+                        <div>
+                            <label style={{
                                 padding: "12px",
-                                borderRadius: "8px",
-                                border: "1px solid #ccc",
-                                fontSize: "1rem",
-                                backgroundColor: "#eee",
-                                color: "#222",
-                                borderRadius: "50px",
-                            }}
-                        >
-                            <option value="">
-                                Selecione o Indicador
-                            </option>
-
-                            {indicadores?.map((indicador) => (
-                                <option
-                                    key={indicador.id}
-                                    value={indicador.id}
-                                >
-                                    {indicador.nome}
+                                color: "#08a88a",
+                                fontWeight: "bold",
+                            }}>
+                                Indicador</label>
+                            <select
+                                value={indicadorSelecionado}
+                                disabled
+                                style={{
+                                    width: "100%",
+                                    padding: "12px",
+                                    borderRadius: "8px",
+                                    border: "1px solid #ccc",
+                                    fontSize: "1rem",
+                                    backgroundColor: "#eee",
+                                    color: "#222",
+                                    borderRadius: "50px",
+                                }}
+                            >
+                                <option value="">
+                                    Selecione o Indicador
                                 </option>
-                            ))}
-                        </select>
 
-                        <input
-                            type="number"
-                            step="0.01"
-                            placeholder="Valor"
-                            value={valorCotacaoEditado}
-                            onChange={(e) =>
-                                setValorCotacaoEditado(e.target.value)
-                            }
-                            style={{
-                                width: "100%",
-                                padding: "12px",
-                                borderRadius: "8px",
-                                border: "1px solid #ccc",
-                                fontSize: "1rem",
-                                backgroundColor: "#eee",
-                                color: "#222",
-                                boxSizing: "border-box",
-                                borderRadius: "50px",
-                            }}
-                        />
+                                {indicadores?.map((indicador) => (
+                                    <option
+                                        key={indicador.id}
+                                        value={indicador.id}
+                                    >
+                                        {indicador.nome}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
 
-                        <input
-                            type="date"
-                            value={dataRegistro}
-                            onChange={(e) =>
-                                setDataRegistro(e.target.value)
-                            }
-                            style={{
-                                width: "100%",
+                        <div>
+                            <label style={{
                                 padding: "12px",
-                                borderRadius: "8px",
-                                border: "1px solid #ccc",
-                                fontSize: "1rem",
+                                color: "#08a88a",
+                                fontWeight: "bold",
+                            }}>Valor R$</label>
+                            <input
+                                type="number"
+                                step="0.01"
+                                placeholder="Valor"
+                                value={valorCotacaoEditado}
+                                onChange={(e) =>
+                                    setValorCotacaoEditado(e.target.value)
+                                }
+                                style={{
+                                    width: "100%",
+                                    padding: "12px",
+                                    borderRadius: "8px",
+                                    border: "1px solid #ccc",
+                                    fontSize: "1rem",
+                                    backgroundColor: "#eee",
+                                    color: "#222",
+                                    boxSizing: "border-box",
+                                    borderRadius: "50px",
+                                }}
+                            />
+                        </div>
+
+                        <div>
+                            <label style={{
+                                padding: "12px",
+                                color: "#08a88a",
+                                fontWeight: "bold",
+                            }}>
+                                Data de Registro</label>
+                            <div style={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: "10px",
                                 backgroundColor: "#eee",
-                                color: "#222",
-                                boxSizing: "border-box",
+                                padding: "12px",
                                 borderRadius: "50px",
-                            }}
-                        />
+                                width: "100%",
+                                height: "45px",
+                                border: "1px solid #ccc",
+                                boxSizing: "border-box"
+                            }}>
+                                <Calendar size={25} color="#08a88a" />
+                                <DatePicker
+                                    selected={dataRegistro}
+                                    onChange={(date) => setDataRegistro(date)}
+                                    dateFormat="dd/MM/yyyy"
+                                    readOnly={true}
+                                    className="custom-datepicker"
+                                    onKeyDown={(e) => {
+                                        if (e.key != "Tab") {
+                                            e.preventDefault();
+                                        }
+                                    }}
+                                />
+                            </div>
+
+                        </div>
 
                     </div>
 
@@ -162,7 +193,7 @@ export default function EditCotacaoModal({
                                 borderRadius: "8px",
                                 border: "none",
                                 cursor: "pointer",
-                                backgroundColor: "#222",
+                                backgroundColor: "#777",
                                 color: "#fff",
                                 borderRadius: "50px",
                             }}
@@ -189,7 +220,19 @@ export default function EditCotacaoModal({
                     </div>
 
                 </motion.div>
-
+                <style>{`
+                .custom-datepicker {
+                    width: 100%;
+                    height: 40px;
+                    border: none;
+                    outline: none;
+                    text-align: start;
+                    background: transparent;
+                    font-size: 16px;
+                    cursor: pointer;
+                    color: #222;
+                }
+            `}</style>
             </div>
         </AnimatePresence>
     );
